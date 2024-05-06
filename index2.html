@@ -1,0 +1,119 @@
+<!DOCTYPE html>  
+<html>  
+    <head>  
+        <title>柱子图案示例</title>  
+        <meta charset="UTF-8">  
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <style>  
+            .cls1 {  
+                color: purple;  
+            }  
+            .layer {  
+                position: absolute;  
+                width: 7px; /* 设定柱子宽度 */  
+                height: 450px; /* 设定柱子高度 */  
+                background-color: orange;  
+                border-radius: 5px;  
+            }  
+              
+            /* 为每个柱子设定不同的初始位置 */  
+            #pillar1 {  
+                left: 100px;  
+                top: 100px;  
+            }  
+            #pillar2 {  
+                left: 590px;  
+                top: 100px;  
+            }  
+            #pillar3 {  
+                left: 1100px;  
+                top: 100px;  
+            }  
+        </style>  
+        <style id="dynamic">  
+            @keyframes diskmove  
+            {  
+                0% { left: 100px; top: 200px; }  
+                100% { left: 400px; top: 500px; }  
+            }  
+        </style>  
+    </head>  
+    <body>  
+        <!-- 加入三个柱子 -->  
+        <div id="pillar1" class="layer"></div>  
+        <div id="pillar2" class="layer"></div>  
+        <div id="pillar3" class="layer"></div>  
+  
+        <!-- 引入其他脚本 -->  
+        <script src="drag.js"></script>  
+        <script src="hanoi.js"></script>  
+
+      
+        
+Number of Disks to play<select id=numdisks></select>
+
+<input id=startbtn type=button onclick=startgame() class=button1 value=Start  
+onmouseenter="showhint('Start the game,'Start')"  onmouseout=hidehint('Start')>
+<input id=pausebtn type=button onclick=pausegame() class=button1 value=Pause>  
+<input id=resumebtn type=button onclick=resumegame() class=button1 value=Resume>
+
+Period Time<select id=period></select>
+
+<script>
+let s=document.getElementById('numdisks');
+for(let n=0;n<10;n++)
+	s.options[n]=new Option(n+3,n+3);
+
+s=document.getElementById('period');
+for(let n=0;n<5;n++)
+	s.options[n]=new Option((n+1)*0.5,(n+1)*0.5);
+
+var handle;
+var orderOfInstruction=0;
+function startgame()
+{
+	let s=document.getElementById('numdisks');
+	N=s.options[s.selectedIndex].value;
+	tower(N);
+	move();
+	movedisk(0);
+}
+
+function pausegame()
+{
+	clearTimeout(handle);
+}
+
+function resumegame()
+{
+	movedisk(orderOfInstruction);
+}
+
+function showhint(hint,btnvalue)
+{
+	let dv=document.createElement('div');
+	dv.id=btnvalue;
+	dv.style.cssText='position:absolute;left:200px;top:300px;background-color:yellow;color:purple;border-radius:4px;box-shadow:2px 2px #676787';
+	dv.innerHTML=hint;
+	document.body.appendChild(dv);
+}
+function hidehint(btnvalue)
+{
+	let dv=document.getElementById(btnvalue);
+	dv.parentNode.removeChild(dv);
+}
+let time;
+window.onblur=function()
+{
+	time=(new Date()).getTime();console.log(time);
+}
+window.onfocus=function()
+{
+	let time1=(new Date()).getTime();
+	let diff=time1-time;
+	showhint('You have left for'+diff+'milliseconds','time');
+	setTimeout("hidehint('time')",6000);
+}
+</script>
+    </body>  
+</html>
